@@ -1,7 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 
-const users = require("./routes/api/users");
+const auth = require("./routes/api/auth");
 
 const profile = require("./routes/api/profile");
 
@@ -14,16 +14,19 @@ const db = require("./config/keys").mongoURI;
 
 // connect to mongo
 mongoose
-  .connect(db)
+  .connect(
+    db,
+    { useNewUrlParser: true }
+  )
   .then(() => console.log("Connected to mlab"))
   .catch(err => console.log(err));
 
 app.get("/", (req, res) => res.send("Hello"));
 
 // routes
-app.use("./routes/api/users", users);
-app.use("./routes/api/profile", profile);
-app.use("./routes/api/posts", posts);
+app.use("/api/auth", auth);
+app.use("/api/profile", profile);
+app.use("/api/posts", posts);
 
 const port = process.env.port || 4000;
 
