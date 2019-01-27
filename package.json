@@ -1,0 +1,35 @@
+{
+  "name": "mern-social-network",
+  "version": "1.0.0",
+  "description": "A simple social network for learning the MERN stack",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sokushinbutsu/mern-social-network.git"
+  },
+  "keywords": [
+    "MERN"
+  ],
+  "author": "Brian Nelson",
+  "license": "AGPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/Sokushinbutsu/mern-social-network/issues"
+  },
+  "homepage": "https://github.com/Sokushinbutsu/mern-social-network#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4",
+    "jsonwebtoken": "^8.4.0",
+    "mongoose": "^5.4.7",
+    "passport": "^0.4.0",
+    "passport-jwt": "^4.0.0",
+    "validator": "^10.11.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.9"
+  }
+}
