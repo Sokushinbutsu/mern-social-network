@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 // Schema creation
-const UserSchema = new Schema({
+const AuthSchema = new Schema({
   name: {
     type: String,
     required: true
@@ -16,13 +16,12 @@ const UserSchema = new Schema({
     required: true
   },
   avatar: {
-    type: String,
-    required: true
+    type: String //fetched from gravatar by email.
   },
   date: {
-    type: date,
-    required: Date.now
+    type: Date,
+    default: Date.now
   }
 });
 
-module.exports = User = mongoose.model("users", UserSchema);
+module.exports = User = mongoose.model("Auth", AuthSchema);
