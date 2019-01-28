@@ -1,6 +1,8 @@
 const Validator = require("validator");
 const isEmpty = require("./is-empty");
 
+//TODO: fix issue where errors.x is overwritten in case of multiple errors.
+
 module.exports = function validateRegisterInput(data) {
   let errors = {};
 
@@ -9,22 +11,6 @@ module.exports = function validateRegisterInput(data) {
   data.email = !isEmpty(data.email) ? data.email : "";
   data.password = !isEmpty(data.password) ? data.password : "";
   data.password2 = !isEmpty(data.password2) ? data.password2 : "";
-
-  if (Validator.isEmpty(data.name)) {
-    errors.name = "Name is empty";
-  }
-
-  if (Validator.isEmpty(data.email)) {
-    errors.email = "Email is empty";
-  }
-
-  if (!Validator.isEmpty(data.password)) {
-    errors.password = "password field is required";
-  }
-
-  if (Validator.isEmpty(data.password2)) {
-    errors.password = "Confirm password field is required";
-  }
 
   if (!Validator.isEmail(data.email)) {
     errors.email = "Invalid Email";
@@ -40,6 +26,22 @@ module.exports = function validateRegisterInput(data) {
 
   if (!Validator.equals(data.password, data.password2)) {
     errors.password2 = "Passwords do not match";
+  }
+
+  if (Validator.isEmpty(data.name)) {
+    errors.name = "Name field is required";
+  }
+
+  if (Validator.isEmpty(data.email)) {
+    errors.email = "Email field is required";
+  }
+
+  if (Validator.isEmpty(data.password)) {
+    errors.password = "Password field is required";
+  }
+
+  if (Validator.isEmpty(data.password2)) {
+    errors.password2 = "Confirm password field is required";
   }
 
   return {
