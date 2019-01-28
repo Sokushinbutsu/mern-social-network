@@ -11,6 +11,12 @@ options.secretOrKey = keys.secretOrKey;
 module.exports = passport => {
   passport.use(
     new JwtStrategy(options, (jwt_payload, done) => {
+      /* jwt_payload contains:
+       Id:
+       name:
+       avatar: gravatar url if exists, otherwise default
+       iat: Issued At
+       exp: expiration time*/
       console.log(jwt_payload);
     })
   );

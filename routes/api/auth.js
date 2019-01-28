@@ -8,14 +8,10 @@ const passport = require("passport");
 // Load Auth module
 const Auth = require("../../models/Auth");
 
-// @route GET api/auth/test
-// @desc Tests auth route
-// @access Public
-router.get("/test", (req, res) => res.json({ msg: "auth works" }));
-
-// @route GET api/auth/register
-// @desc Register a user
-// @access Public
+/* 
+@route GET api/auth/register
+@desc Register a user
+@access Public */
 router.post("/register", (req, res) => {
   //check to make sure email is not already registered.
   Auth.findOne({ email: req.body.email }).then(auth => {
@@ -49,9 +45,10 @@ router.post("/register", (req, res) => {
   });
 });
 
-// @route GET api/auth/login
-// @desc User login / return JWT token
-// @access Public
+/* 
+@route GET api/auth/login
+@desc User login / return JWT token
+@access Public */
 router.post("/login", (req, res) => {
   const email = req.body.email;
   const passwd = req.body.password;
@@ -87,10 +84,11 @@ router.post("/login", (req, res) => {
   });
 });
 
-// @route GET api/auth/current
-// @desc User login / return JWT token
-// @access Private
-// Will return Unauthorized without valid token
+/* 
+@route GET api/auth/current
+@desc User login / return JWT token
+@access Private
+Will return Unauthorized without valid token */
 router.get(
   "/current",
   passport.authenticate("jwt", { session: false }),
