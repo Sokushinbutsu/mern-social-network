@@ -1,8 +1,6 @@
 const Validator = require("validator");
 const isEmpty = require("./is-empty");
 
-//TODO: fix issue where errors.x is overwritten in case of multiple errors.
-
 module.exports = function validateRegisterInput(data) {
   let errors = {};
 
