@@ -17,7 +17,12 @@ module.exports = passport => {
        avatar: gravatar url if exists, otherwise default
        iat: Issued At
        exp: expiration time*/
-      console.log(jwt_payload);
+      Auth.findById(jwt_payload.id)
+        .then(user => {
+          if (user) return done(null, user);
+          return done(null, false);
+        })
+        .catch(err => console.log(err));
     })
   );
 };

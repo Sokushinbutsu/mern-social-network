@@ -5,6 +5,10 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const keys = require("../../config/keys");
 const passport = require("passport");
+
+// Load input validation
+const validateRegisterInput = require("../../validation/register");
+
 // Load Auth module
 const Auth = require("../../models/Auth");
 
@@ -13,10 +17,18 @@ const Auth = require("../../models/Auth");
 @desc Register a user
 @access Public */
 router.post("/register", (req, res) => {
-  //check to make sure email is not already registered.
+  const { errors, isValid } = validateRegisterInput(req.body);
+  // Input validation first level
+  if (!isValid) {
+    return res.status(400).json(errors);
+  }
+
+  // Database level input validation.
+  // Checks to make sure email is not already registered.
   Auth.findOne({ email: req.body.email }).then(auth => {
     if (auth) {
-      return res.status(400).json({ email: "email already in use" });
+      errors.email = "email already is use";
+      return res.status(400).json(errors);
     } else {
       const avatar = gravatar.url(req.body.email, {
         s: "200", // size
@@ -32,13 +44,15 @@ router.post("/register", (req, res) => {
 
       bcrypt.genSalt(10, (err, salt) => {
         bcrypt.hash(newUser.password, salt, (err, hash) => {
-          if (err) throw err;
+          if (err) console.log(err);
           newUser.password = hash;
           newUser
             .save()
             .then(user => res.json(user))
             .catch(err => console.log(err));
-          //TODO: better error handling and research regarding password best practices.
+          /* TODO: better error handling and research
+          password handling best practices. 
+          Currently this crashes when === 2 characters*/
         });
       });
     }
@@ -88,12 +102,18 @@ router.post("/login", (req, res) => {
 @route GET api/auth/current
 @desc User login / return JWT token
 @access Private
-Will return Unauthorized without valid token */
+Will return Unauthorized without valid token 
+THIS IS JUST FOR TESTING
+TODO: delete*/
 router.get(
   "/current",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    res.json({ msg: "Success" });
+    res.json({
+      id: req.user.id,
+      name: req.user.name,
+      email: req.user.email
+    });
   }
 );
 
