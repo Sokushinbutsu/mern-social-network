@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const bp = require("body-parser");
+const passport = require("passport");
 
 const auth = require("./routes/api/auth");
 const profile = require("./routes/api/profile");
@@ -24,8 +25,11 @@ mongoose
   .then(() => console.log("Connected to mlab"))
   .catch(err => console.log(err));
 
-app.get("/", (req, res) => res.send("Hello"));
+// Passport middleware
+app.use(passport.initialize());
 
+// Passport config
+require("./config/passport.js")(passport);
 // routes
 app.use("/api/auth", auth);
 app.use("/api/profile", profile);
