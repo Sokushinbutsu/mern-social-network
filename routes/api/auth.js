@@ -31,6 +31,7 @@ router.post("/register", (req, res) => {
       errors.email = "email already is use";
       return res.status(400).json(errors);
     } else {
+      // Gets gravatar if exists, otherwise default gravatar
       const avatar = gravatar.url(req.body.email, {
         s: "200", // size
         r: "r", // rating

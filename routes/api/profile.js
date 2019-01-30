@@ -10,11 +10,6 @@ const validateProfileInput = require("../../validation/profile");
 const Profile = require("../../models/Profile");
 const Auth = require("../../models/Auth");
 
-// @route GET api/profile/test
-// @desc Tests profile route
-// @access Public
-router.get("/test", (req, res) => res.json({ msg: "profile works" }));
-
 /* 
 @route GET api/profile
 @desc Gets current users profile
@@ -26,6 +21,7 @@ router.get(
     const errors = {};
 
     Profile.findOne({ user: req.user.id })
+      .populate("user", ["name", "avatar"])
       .then(profile => {
         if (!profile) {
           errors.noProfile = "Profile not found for this user";
@@ -54,7 +50,7 @@ router.post(
       return res.status(400).json(errors);
     }
 
-    // Get all fields
+    // Get profile fields from request and put into object
     const profileFields = {};
 
     profileFields.user = req.user.id;
