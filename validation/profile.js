@@ -13,15 +13,15 @@ module.exports = function validateLoginInput(data) {
     errors.username = "Username must be between 2 and 40 characters";
   }
 
-  if (Validator.isEmpty(data.username, { min: 2, max: 40 })) {
+  if (Validator.isEmpty(data.username)) {
     errors.username = "Username is required";
   }
 
-  if (Validator.isEmpty(data.status, { min: 2, max: 40 })) {
+  if (Validator.isEmpty(data.status)) {
     errors.status = "Status is required";
   }
 
-  if (Validator.isEmpty(data.skills, { min: 2, max: 40 })) {
+  if (Validator.isEmpty(data.skills)) {
     errors.skills = "Skills field is required";
   }
 

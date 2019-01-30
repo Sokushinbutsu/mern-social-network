@@ -3,6 +3,9 @@ const router = express.Router();
 const mongoose = require("mongoose");
 const passport = require("passport");
 
+// Load Validation
+const validateProfileInput = require("../../validation/profile");
+
 // Load Auth and Profile Model
 const Profile = require("../../models/Profile");
 const Auth = require("../../models/Auth");
@@ -40,17 +43,22 @@ router.get(
 @access Private 
 This route handles both profile creation and modification
 */
-router.get(
+router.post(
   "/",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
+    const { errors, isValid } = validateProfileInput(req.body);
+
+    // Check Validation and return 400 status if errors found
+    if (!isValid) {
+      return res.status(400).json(errors);
+    }
+
     // Get all fields
     const profileFields = {};
-    //create error object
-    let errors = {};
 
     profileFields.user = req.user.id;
-    if (req.body.handle) profileFields.handle = req.body.handle;
+    if (req.body.username) profileFields.username = req.body.username;
     if (req.body.company) profileFields.company = req.body.company;
     if (req.body.website) profileFields.website = req.body.website;
     if (req.body.location) profileFields.location = req.body.location;
@@ -72,7 +80,8 @@ router.get(
     if (req.body.linkedin) profileFields.social.linkedin = req.body.linkedin;
     if (req.body.instagram) profileFields.instagram = req.body.instagram;
 
-    profile.Findone({ user: req.user.id }).then(profile => {
+    // Query Profile in mongo
+    Profile.findOne({ user: req.user.id }).then(profile => {
       if (profile) {
         // Update profile
         Profile.findOneAndUpdate(
