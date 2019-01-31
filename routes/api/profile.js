@@ -39,7 +39,7 @@ router.get(
 @access Public */
 router.get("/all", (req, res) => {
   const errors = {};
-  Profile.find()
+  Profile.find() // Gets all documents from profiles collection
     .populate("user", ["name", "avatar"])
     .then(profiles => {
       if (!profiles) {
@@ -161,4 +161,33 @@ router.post(
   }
 );
 
+/* 
+@route POST api/profile/experience
+@desc Add experience to profile
+@access Private */
+router.post(
+  "/experience",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    Profile.findOne({ user: req.user.id }).then(profile => {
+      const newExp = {
+        title: req.body.title,
+        company: req.body.company,
+        location: req.body.location,
+        from: req.body.from,
+        to: req.body.to,
+        current: req.body.current,
+        description: req.body.description
+      };
+
+      // Add to experience array
+      profile.experience.unshift(newExp);
+
+      profile
+        .save()
+        .then(profile => res.json(profile))
+        .catch(err => res.json(err));
+    });
+  }
+);
 module.exports = router;
