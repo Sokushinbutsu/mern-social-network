@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 const ProfileSchema = new Schema({
   user: {
     type: Schema.Types.ObjectId,
-    ref: "Auth"
+    ref: "Auth" // This must be capitalized or .populate will fail silently!
   },
   username: {
     type: String,
