@@ -34,6 +34,24 @@ router.get(
 );
 
 /* 
+@route GET api/profile/all
+@desc Get all profiles
+@access Public */
+router.get("/all", (req, res) => {
+  const errors = {};
+  Profile.find()
+    .populate("user", ["name", "avatar"])
+    .then(profiles => {
+      if (!profiles) {
+        errors.noProfile = "There are no profiles";
+        return res.status(404).json();
+      }
+      res.json(profiles);
+    })
+    .catch(err => res.status(404).json({ Profiles: "There are no profiles" }));
+});
+
+/* 
 @route GET api/profile/username/:username
 @desc fetch user profile by username
 @access Public */
@@ -45,12 +63,12 @@ router.get("/username/:username", (req, res) => {
     .populate("user", ["name", "avatar"])
     .then(profile => {
       if (!profile) {
-        errors.noprofile = "Profile does not exist";
+        errors.noProfile = "Profile not found";
         res.status(404).json(errors);
       }
       res.json(profile);
     })
-    .catch(err => res.status(404).json(errors));
+    .catch(err => res.status(404).json({ noProfile: "Profile not found" }));
 });
 
 /* 
@@ -65,7 +83,7 @@ router.get("/user/:user_id", (req, res) => {
     .populate("user", ["name", "avatar"])
     .then(profile => {
       if (!profile) {
-        errors.noprofile = "Profile does not exist";
+        errors.noProfile = "Profile not found";
         res.status(404).json(errors);
       }
       res.json(profile);
