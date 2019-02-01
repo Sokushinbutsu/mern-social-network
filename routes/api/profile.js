@@ -6,7 +6,7 @@ const passport = require("passport");
 // Load Validation
 const validateProfileInput = require("../../validation/profile");
 const validateExperienceInput = require("../../validation/experience");
-
+const validateEducationInput = require("../../validation/education");
 // Load Auth and Profile Model
 const Profile = require("../../models/Profile");
 const Auth = require("../../models/Auth");
@@ -133,7 +133,7 @@ router.post(
     if (req.body.twitter) profileFields.social.twitter = req.body.twitter;
     if (req.body.facebook) profileFields.social.facebook = req.body.facebook;
     if (req.body.linkedin) profileFields.social.linkedin = req.body.linkedin;
-    if (req.body.instagram) profileFields.instagram = req.body.instagram;
+    if (req.body.instagram) profileFields.social.instagram = req.body.instagram;
 
     // Query Profile in mongo
     Profile.findOne({ user: req.user.id }).then(profile => {
@@ -195,4 +195,39 @@ router.post(
     });
   }
 );
+
+/* 
+@route POST api/profile/education
+@desc Add education to profile
+@access Private */
+router.post(
+  "/education",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { errors, isValid } = validateEducationInput(req.body);
+
+    // Check validation
+    if (!isValid) {
+      return res.status(400).json(errors);
+    }
+
+    Profile.findOne({ user: req.user.id }).then(profile => {
+      const newEdu = {
+        school: req.body.school,
+        degree: req.body.degree,
+        fieldOfStudy: req.body.fieldOfStudy,
+        from: req.body.from,
+        to: req.body.to,
+        current: req.body.current,
+        description: req.body.description
+      };
+
+      // Add to education array
+      profile.education.unshift(newEdu);
+
+      profile.save().then(profile => res.json(profile));
+    });
+  }
+);
+
 module.exports = router;
