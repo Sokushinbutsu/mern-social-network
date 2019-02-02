@@ -2,7 +2,6 @@ const Validator = require("validator");
 const isEmpty = require("./is-empty");
 
 module.exports = function validateExperienceInput(data) {
-  //TODO: Make certain fields required based on whether other fields are filled in
   let errors = {};
 
   // If field is empty make it empty string for testing purposes
